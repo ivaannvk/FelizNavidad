@@ -95,7 +95,7 @@ const cerrarSorpresa = document.getElementById("cerrarSorpresa");
 
 // Para probar el calendario puedes cambiar null por "2026-12-05".
 // Cuando termines, vuelve a dejarlo en null.
-const FECHA_PRUEBA = "2026-12-24";
+const FECHA_PRUEBA = null;
 
 
 // CONTENIDO DE LAS 24 CASILLAS
@@ -146,22 +146,24 @@ try {
 // CALCULAR QUÉ DÍA ESTÁ DISPONIBLE
 
 function obtenerDiaDisponible() {
-    const fecha = FECHA_PRUEBA
-        ? new Date(FECHA_PRUEBA + "T12:00:00")
-        : new Date();
+    const fecha = new Date();
 
     const año = fecha.getFullYear();
     const mes = fecha.getMonth();
+    const dia = fecha.getDate();
 
-    if (año > 2026 || (año === 2026 && mes > 11)) {
-        return 24;
+    // Antes de diciembre de 2026
+    if (año < 2026 || (año === 2026 && mes < 11)) {
+        return 0;
     }
 
+    // Durante diciembre de 2026
     if (año === 2026 && mes === 11) {
-        return fecha.getDate();
+        return Math.min(dia, 24);
     }
 
-    return 0;
+    // Después de diciembre de 2026
+    return 24;
 }
 
 
@@ -182,17 +184,19 @@ function crearCalendario() {
 
         const estado = document.createElement("small");
 
-        if (diasAbiertos.includes(i)) {
-            // Mantiene el aspecto de casilla cerrada.
-            casilla.classList.add("bloqueada-visual");
-            estado.textContent = "DESCUBRIR";
+        if (i <= diaDisponible) {
 
-        } else if (i <= diaDisponible) {
+            if (diasAbiertos.includes(i)) {
+            casilla.classList.add("bloqueada-visual");
+            }
+
             estado.textContent = "DESCUBRIR";
 
         } else {
+
             estado.textContent = "BLOQUEADA";
             casilla.disabled = true;
+
         }
 
         casilla.appendChild(numero);
