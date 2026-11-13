@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Un pequeño regalo para ti</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+    <main class="contenedor">
+
+        <section class="bienvenida">
+
+            <p class="subtitulo">NAVIDAD 2026</p>
+
+            <h1>Un pequeño regalo para ti</h1>
+
+            <p class="descripcion">
+                Este año quería regalarte algo diferente...
+                Algo que no se pueda envolver.
+            </p>
+
+            <button id="botonInicio">
+                Descubrir mi regalo
+            </button>
+
+        </section>
+
+        <section class="regalo" id="seccionRegalo" hidden>
+
+            <h2>He preparado algo para ti...</h2>
+
+            <p>Pero tendrás que abrirlo para descubrirlo.</p>
+
+            <div class="caja-regalo" id="cajaRegalo">
+                🎁
+            </div>
+
+            <button id="botonAbrir">
+                Abrir regalo
+            </button>
+
+            <p id="mensajeRegalo" hidden>
+                Lo más bonito de algunos regalos
+                es la intención con la que se preparan.
+            </p>
+
+        </section>
+
+        
+        <!-- CARTA SECRETA -->
+
+        <section class="carta-contenedor" id="seccionCarta" hidden>
+
+            <h2>Hay algo que quiero contarte...</h2>
+
+            <div class="sobre" id="sobre">
+                <div class="sello">♥</div>
+                <div class="texto-sobre">Para alguien especial</div>
+            </div>
+
+            <article class="carta" id="carta" hidden>
+
+                <h2>Querida persona especial:</h2>
+
+                <p id="textoCarta"></p>
+
+                <p id="firma" hidden>
+                    Con cariño,<br>
+                    Alguien que quería regalarte algo diferente.
+                </p>
+
+            </article>
+
+        </section>
+        
+        <button id="botonCalendario">
+            Descubrir el calendario de Adviento
+        </button>
+
+        <!-- CALENDARIO DE ADVIENTO -->
+        <section class="calendario-contenedor" id="seccionCalendario" hidden>
+
+            <h2>24 pequeños motivos para sonreír</h2>
+
+            <p class="introduccion-calendario">
+                Cada día esconde una pequeña sorpresa.
+                ¿Te animas a descubrirlas?
+            </p>
+
+            <div class="calendario" id="calendario">
+
+                <!-- Las 24 casillas se crearán con JavaScript -->
+
+            </div>
+
+            <div class="sorpresa" id="sorpresa" hidden>
+                <h3 id="tituloSorpresa"></h3>
+                <div id="contenidoSorpresa"></div>
+                <button id="cerrarSorpresa">Cerrar</button>
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="java.js"></script>
+
+</body>
+</html>
