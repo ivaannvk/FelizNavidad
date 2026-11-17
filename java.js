@@ -241,10 +241,11 @@ function abrirSorpresa(dia) {
 
         audio.src = dato.contenido;
         audio.controls = true;
-        audio.preload = "metadata";
+        audio.preload = "auto";
         audio.style.width = "100%";
 
         contenidoSorpresa.appendChild(audio);
+        audio.load();
 
 
     // VÍDEOS
