@@ -1,4 +1,3 @@
-
 const botonInicio = document.getElementById("botonInicio");
 const bienvenida = document.querySelector(".bienvenida");
 const seccionRegalo = document.getElementById("seccionRegalo");
@@ -35,6 +34,8 @@ sobre.addEventListener("click", () => {
 });
 
 /* EFECTO DE ESCRITURA */
+let intervaloCarta = null;
+
 function escribirCarta() {
     const mensaje = `Quería aprovechar estas fechas para decirte algo.
 
@@ -50,16 +51,21 @@ pero sí sé que me alegra haberte conocido.
 Espero que esta Navidad te regale
 tantos momentos bonitos como los que mereces.`;
 
+    if (intervaloCarta) {
+        clearInterval(intervaloCarta);
+    }
+
     let posicion = 0;
     textoCarta.textContent = "";
     firma.hidden = true;
 
-    const intervalo = setInterval(() => {
+    intervaloCarta = setInterval(() => {
         textoCarta.textContent += mensaje.charAt(posicion);
         posicion++;
 
         if (posicion >= mensaje.length) {
-            clearInterval(intervalo);
+            clearInterval(intervaloCarta);
+            intervaloCarta = null;
             firma.hidden = false;
         }
     }, 45);
@@ -82,9 +88,7 @@ function crearNieve() {
 
 setInterval(crearNieve, 300);
 
-
 /* CALENDARIO DE ADVIENTO */
-
 const botonCalendario = document.getElementById("botonCalendario");
 const seccionCalendario = document.getElementById("seccionCalendario");
 const calendario = document.getElementById("calendario");
@@ -93,19 +97,15 @@ const tituloSorpresa = document.getElementById("tituloSorpresa");
 const contenidoSorpresa = document.getElementById("contenidoSorpresa");
 const cerrarSorpresa = document.getElementById("cerrarSorpresa");
 
-// Para probar el calendario puedes cambiar null por "2026-12-05".
-// Cuando termines, vuelve a dejarlo en null.
+// Cambia esta fecha solo para probar el calendario.
 const FECHA_PRUEBA = null;
-
-
-// CONTENIDO DE LAS 24 CASILLAS
 
 const sorpresas = [
     { tipo: "foto", titulo: "Un primer recuerdo", contenido: "./img/foto1.jpg" },
     { tipo: "boleto", titulo: "Una tarde de cine", contenido: "🎬 VALE POR UNA TARDE DE CINE. Película, palomitas y buena compañía. ¡Tú eliges qué vemos!" },
     { tipo: "frase", titulo: "Un pequeño recordatorio", contenido: "Hay personas que hacen especiales los días normales." },
     { tipo: "foto", titulo: "Un momento especial", contenido: "./img/foto2.jpg" },
-    { tipo: "cancion", titulo: "Promesa", contenido: "./img/Melendi-Lapromesa.mp3" },
+    { tipo: "cancion", titulo: "Es la primera vez que dedico una cancion a alguien tan especial como lo eres tú", contenido: "./img/Melendi-Lapromesa.mp3" },
     { tipo: "foto", titulo: "Una sonrisa", contenido: "./img/foto3.jpg" },
     { tipo: "cancion", titulo: "Una canción para ti", contenido: "./img/SlappyLindooOo.mp3" },
     { tipo: "frase", titulo: "Un día bonito", contenido: "Un día más, una nueva razón para sonreír." },
@@ -117,8 +117,8 @@ const sorpresas = [
     { tipo: "boleto", titulo: "Una cena especial", contenido: "🍽️ VALE POR UNA CENA ESPECIAL. Elegimos nuestro sitio favorito, disfrutamos de algo rico y compartimos una velada diferente." },
     { tipo: "foto", titulo: "Otro recuerdo bonito", contenido: "./img/foto4.jpg" },
     { tipo: "cancion", titulo: "Nuestra banda sonora", contenido: "./img/OMARCOURTZ-PORSIMAÑANANOESTOY.mp3" },
-    { tipo: "boleto",titulo: "Una pequeña aventura",contenido: "🎡 VALE POR UNA AVENTURA JUNTOS. Un lugar nuevo, un plan improvisado y un recuerdo que guardar." },
-    { tipo: "cancion", titulo: "Una canción especial", contenido: "./img/SlappyAv,NoTeTengoATí.mp3"},
+    { tipo: "boleto", titulo: "Una pequeña aventura", contenido: "🎡 VALE POR UNA AVENTURA JUNTOS. Un lugar nuevo, un plan improvisado y un recuerdo que guardar." },
+    { tipo: "cancion", titulo: "Una canción especial", contenido: "./img/SlappyAv,NoTeTengoATí.mp3" },
     { tipo: "foto", titulo: "Un instante", contenido: "./img/foto5.jpg" },
     { tipo: "video", titulo: "Un pequeño vídeo", contenido: "./img/video1.mp4" },
     { tipo: "frase", titulo: "Un deseo navideño", contenido: "Espero que hayas disfrutado de estas pequeñas sorpresas." },
@@ -127,51 +127,46 @@ const sorpresas = [
     { tipo: "foto", titulo: "La última sorpresa", contenido: "./img/foto6.jpg" }
 ];
 
-
-// RECUPERAR LOS DÍAS ABIERTOS
-
 let diasAbiertos = [];
 
 try {
-    diasAbiertos = JSON.parse(localStorage.getItem("diasAbiertos") || "[]");
+    const guardados = JSON.parse(localStorage.getItem("diasAbiertos") || "[]");
 
-    if (!Array.isArray(diasAbiertos)) {
-        diasAbiertos = [];
+    if (Array.isArray(guardados)) {
+        diasAbiertos = guardados.filter((dia) =>
+            Number.isInteger(dia) && dia >= 1 && dia <= 24
+        );
     }
 } catch (error) {
     diasAbiertos = [];
 }
 
-
-// CALCULAR QUÉ DÍA ESTÁ DISPONIBLE
-
 function obtenerDiaDisponible() {
-    const fecha = new Date("2026-12-07T12:00:00");  
+    const fecha = FECHA_PRUEBA
+        ? new Date(FECHA_PRUEBA + "T12:00:00")
+        : new Date();
+
+    if (Number.isNaN(fecha.getTime())) {
+        return 0;
+    }
 
     const año = fecha.getFullYear();
     const mes = fecha.getMonth();
     const dia = fecha.getDate();
 
-    // Antes de diciembre de 2026
     if (año < 2026 || (año === 2026 && mes < 11)) {
         return 0;
     }
 
-    // Durante diciembre de 2026
     if (año === 2026 && mes === 11) {
         return Math.min(dia, 24);
     }
 
-    // Después de diciembre de 2026
     return 24;
 }
 
-
-// CREAR LAS 24 CASILLAS
-
 function crearCalendario() {
     calendario.innerHTML = "";
-
     const diaDisponible = obtenerDiaDisponible();
 
     for (let i = 1; i <= 24; i++) {
@@ -185,18 +180,13 @@ function crearCalendario() {
         const estado = document.createElement("small");
 
         if (i <= diaDisponible) {
-
             if (diasAbiertos.includes(i)) {
-            casilla.classList.add("bloqueada-visual");
+                casilla.classList.add("abierta");
             }
-
             estado.textContent = "DESCUBRIR";
-
         } else {
-
             estado.textContent = "BLOQUEADA";
             casilla.disabled = true;
-
         }
 
         casilla.appendChild(numero);
@@ -210,9 +200,6 @@ function crearCalendario() {
     }
 }
 
-
-// ABRIR UNA SORPRESA
-
 function abrirSorpresa(dia) {
     const diaDisponible = obtenerDiaDisponible();
 
@@ -221,117 +208,58 @@ function abrirSorpresa(dia) {
     }
 
     const dato = sorpresas[dia - 1];
-
     tituloSorpresa.textContent = dato.titulo;
     contenidoSorpresa.innerHTML = "";
 
-
-    // FOTOGRAFÍAS
     if (dato.tipo === "foto") {
         const imagen = document.createElement("img");
         imagen.src = dato.contenido;
-        imagen.alt = "Una fotografía especial";
-
+        imagen.alt = dato.titulo;
         contenidoSorpresa.appendChild(imagen);
-
-
-    // CANCIONES
     } else if (dato.tipo === "cancion") {
         const audio = document.createElement("audio");
-
         audio.src = dato.contenido;
         audio.controls = true;
-        audio.preload = "auto";
+        audio.preload = "metadata";
         audio.style.width = "100%";
-
         contenidoSorpresa.appendChild(audio);
         audio.load();
-
-
-    // VÍDEOS
     } else if (dato.tipo === "video") {
         const video = document.createElement("video");
-
         video.src = dato.contenido;
         video.controls = true;
         video.preload = "metadata";
         video.style.width = "100%";
         video.style.borderRadius = "8px";
-
         contenidoSorpresa.appendChild(video);
-
-
-    // REGALOS
-    } else if (dato.tipo === "regalo") {
-        const boton = document.createElement("button");
-        boton.type = "button";
-        boton.textContent = "Abrir mi sorpresa";
-
-        const texto = document.createElement("p");
-        texto.textContent = dato.contenido;
-        texto.hidden = true;
-
-        boton.addEventListener("click", () => {
-            texto.hidden = false;
-            boton.hidden = true;
-        });
-
-        contenidoSorpresa.appendChild(boton);
-        contenidoSorpresa.appendChild(texto);
-
-
-    // FRASES Y BOLETOS
     } else {
         const texto = document.createElement("p");
         texto.textContent = dato.contenido;
-
-        if (dato.tipo === "boleto") {
-            texto.classList.add("contenido-boleto");
-        } else {
-            texto.classList.add("contenido-foto");
-        }
-
+        texto.classList.add(dato.tipo === "boleto" ? "contenido-boleto" : "contenido-foto");
         contenidoSorpresa.appendChild(texto);
     }
 
-
-    // GUARDAR EL DÍA COMO ABIERTO
-
     if (!diasAbiertos.includes(dia)) {
         diasAbiertos.push(dia);
-        localStorage.setItem("diasAbiertos", JSON.stringify(diasAbiertos));
+
+        try {
+            localStorage.setItem("diasAbiertos", JSON.stringify(diasAbiertos));
+        } catch (error) {
+            // La sorpresa sigue disponible aunque el navegador no permita guardar preferencias.
+        }
     }
 
     crearCalendario();
-
     sorpresa.hidden = false;
-
-    sorpresa.scrollIntoView({
-        behavior: "smooth",
-        block: "center"
-    });
+    sorpresa.scrollIntoView({ behavior: "smooth", block: "center" });
 }
-
-
-// MOSTRAR EL CALENDARIO
 
 botonCalendario.addEventListener("click", () => {
     seccionCalendario.hidden = false;
-
     crearCalendario();
-
-    seccionCalendario.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-    });
+    seccionCalendario.scrollIntoView({ behavior: "smooth", block: "start" });
 });
-
-
-// CERRAR LA SORPRESA
 
 cerrarSorpresa.addEventListener("click", () => {
     sorpresa.hidden = true;
 });
-
-
-
