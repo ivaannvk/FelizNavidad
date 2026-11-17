@@ -105,7 +105,7 @@ const sorpresas = [
     { tipo: "boleto", titulo: "Una tarde de cine", contenido: "🎬 VALE POR UNA TARDE DE CINE. Película, palomitas y buena compañía. ¡Tú eliges qué vemos!" },
     { tipo: "frase", titulo: "Un pequeño recordatorio", contenido: "Hay personas que hacen especiales los días normales." },
     { tipo: "foto", titulo: "Un momento especial", contenido: "./img/foto2.jpg" },
-    { tipo: "frase", titulo: "Un deseo para ti", contenido: "Ojalá hoy te suceda algo que te haga muy feliz." },
+    { tipo: "cancion", titulo: "Promesa", contenido: "./img/Melendi-Lapromesa.mp3" },
     { tipo: "foto", titulo: "Una sonrisa", contenido: "./img/foto3.jpg" },
     { tipo: "cancion", titulo: "Una canción para ti", contenido: "./img/SlappyLindooOo.mp3" },
     { tipo: "frase", titulo: "Un día bonito", contenido: "Un día más, una nueva razón para sonreír." },
@@ -146,7 +146,7 @@ try {
 // CALCULAR QUÉ DÍA ESTÁ DISPONIBLE
 
 function obtenerDiaDisponible() {
-    const fecha = new Date();
+    const fecha = new Date("2026-12-07T12:00:00");  
 
     const año = fecha.getFullYear();
     const mes = fecha.getMonth();
