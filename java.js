@@ -98,7 +98,8 @@ const contenidoSorpresa = document.getElementById("contenidoSorpresa");
 const cerrarSorpresa = document.getElementById("cerrarSorpresa");
 
 // Cambia esta fecha solo para probar el calendario.
-const FECHA_PRUEBA = null;
+// Ejemplo: "2026-12-15" para probar el día 15 de diciembre de 2026.
+const FECHA_PRUEBA = "2026-12-07"; 
 
 const sorpresas = [
     { tipo: "foto", titulo: "Un primer recuerdo", contenido: "./img/foto1.jpg" },
@@ -146,22 +147,12 @@ function obtenerDiaDisponible() {
         ? new Date(FECHA_PRUEBA + "T12:00:00")
         : new Date();
 
-    if (Number.isNaN(fecha.getTime())) {
-        return 0;
-    }
-
     const año = fecha.getFullYear();
     const mes = fecha.getMonth();
     const dia = fecha.getDate();
 
-    if (año < 2026 || (año === 2026 && mes < 11)) {
-        return 0;
-    }
-
-    if (año === 2026 && mes === 11) {
-        return Math.min(dia, 24);
-    }
-
+    if (año < 2026 || (año === 2026 && mes < 11)) return 0;
+    if (año === 2026 && mes === 11) return Math.min(dia, 24);
     return 24;
 }
 
